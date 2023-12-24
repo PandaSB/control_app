@@ -38,6 +38,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         </div>
         <br>
         </div>
+        <input type="button" value="On" id="onoff" onclick="onoff();">
         <div id="terminal"></div>
         <div id="info"></div>
         <script src="/lib/socket.io/socket.io.min.js"></script>
@@ -60,6 +61,17 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
             term.onData (data => {
                 socket.emit('serial_char',data)
             }); 
+
+            function onoff(){
+                currentvalue = document.getElementById('onoff').value;
+                if(currentvalue == "Off"){
+                    document.getElementById("onoff").value="On";
+                    socket.emit ('relay',0); 
+                }else{
+                    document.getElementById("onoff").value="Off";
+                    socket.emit ('relay',1); 
+                }
+}
 
             socket.on('info', (info) => {
                 const infoElm = document.getElementById('info')

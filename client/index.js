@@ -24,8 +24,23 @@ const cv = require('@u4/opencv4nodejs');
 const fs = require('fs');
 const os = require('os');
 const sp = require("serialport");
-const port = 3000;
-const FPS = 25
+const Gpio = require('onoff').Gpio;
+const config = require('config');
+
+let port = 3000 ; 
+let GpioPin = 416 ; 
+let FPS = 25; 
+console.log("Read config")
+if (config.has('server.port')) {
+    port = config.get('server.port');
+}
+if (config.has('gpio.pin')) {
+    GpioPin = config.get ('gpio.pin');
+} 
+if (config.has('video.FPS')) {
+    FPS = config.get ('video.FPS'); 
+} 
+
 var counter = 0 ; 
 
 var cap = null ; 
@@ -42,6 +57,8 @@ const serialPort = new SPort({
     flowcontrol: false,
     buffersize: 20480
   });
+
+const relay = new Gpio(GpioPin, 'out');
 
 const socket_client = io_client("ws://192.168.0.252:3000", {
 reconnectionDelayMax: 10000,
@@ -129,6 +146,18 @@ io.on('connection', (socket) => {
         {
             cap2 = null
         }
+    });
+
+    socket.on ('relay', function (data) {
+     if (data === 0 )
+     {
+        relay.writeSync(0);
+     } else
+     {
+        relay.writeSync(1);
+
+     }
+
     });
     
     console.log("init serial ")

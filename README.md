@@ -11,6 +11,8 @@ see pre_install.txt for dependency on a linux (debian /ubuntu)
 
 ### Installing
 
+git clone https://github.com/PandaSB/control_app.git
+pnpm install
 
 
 ### Executing program

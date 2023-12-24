@@ -1,0 +1,12 @@
+json
+{
+    "server": {
+      "port": 3000,
+    },
+    "gpio":{
+        "pin" : 416,
+    },
+    "video": {
+        "FPS" : 25,
+    }
+}

@@ -9,6 +9,8 @@ pnpm install --save @u4/opencv4nodejs
 pnpm install --save express
 pnpm install --save socket.io 
 pnpm install --save socket.io-client
+pnpm install --save onoff 
+pnpm install --save config 
 
 export OPENCV_BUILD_ROOT=~/opencv
 ./node_modules/.bin/build-opencv rebuild
