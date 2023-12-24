@@ -1,0 +1,123 @@
+<!--
+Copyright (C) 2023 BARTHELEMY Stephane
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Interface</title>
+        <link rel="stylesheet" href="/static/styles.css">
+        <link rel="stylesheet" href="/lib/xterm/css/xterm.css">
+     </head>
+
+    <body>
+        <div class="container">
+        <div class="video_container">
+        <select name="select1" id="select1" onchange="select1_change()"></select>
+        <br>
+        <img id="image1" width="640" height="auto" class="center">
+        <br>
+        </div>
+        <div class="video_container">
+        <select name="select2" id="select2" onchange="select2_change()"></select>
+        <br>
+        <img id="image2" width="640" height="auto" class="center">
+        <br>
+        </div>
+        <br>
+        </div>
+        <div id="terminal"></div>
+        <div id="info"></div>
+        <script src="/lib/socket.io/socket.io.min.js"></script>
+        <script src="/lib/xterm/xterm.js"></script>
+        
+        <script type="text/javascript">
+            const socket = io();
+            const select1 = document.querySelector('select1'); 
+            const select2 = document.querySelector('select2'); 
+
+            var term = new window.Terminal({
+                cursorBlink: true
+            });
+            term.open(document.getElementById('terminal'));
+
+            term.prompt = () => {
+                term.write('');
+            };
+
+            term.onData (data => {
+                socket.emit('serial_char',data)
+            }); 
+
+            socket.on('info', (info) => {
+                const infoElm = document.getElementById('info')
+                infoElm.innerHTML = info;
+            });
+
+            socket.on ('data', (data) => {
+                term.write(data);
+            });
+
+            socket.on ('image1', (image) => {
+                const imageElm = document.getElementById('image1');
+                imageElm.src = `data:image/jpeg;base64,${image}`;
+            }); 
+            socket.on ('image2', (image) => {
+                const imageElm = document.getElementById('image2');
+                imageElm.src = `data:image/jpeg;base64,${image}`;
+            }); 
+            socket.on ('select1_list', (data) => {
+                const SelectElm = document.getElementById('select1');
+                while (SelectElm.options.length > 0) {
+                    SelectElm.remove(0);
+                }
+                let counter = 0
+                let newOption = new Option('undefined',-1);
+                SelectElm.add(newOption,undefined);
+                while(counter < data.length) {
+                    let newOption = new Option('video '+data[counter].toString(),data[counter]);
+                    SelectElm.add(newOption,undefined);
+                    counter++
+                }
+            }); 
+            socket.on ('select2_list', (data) => {
+                const SelectElm = document.getElementById('select2');
+                while (SelectElm.options.length > 0) {
+                    SelectElm.remove(0);
+                }
+                let counter = 0
+                let newOption = new Option('undefined',-1);
+                SelectElm.add(newOption,undefined);
+                while(counter < data.length) {
+                    let newOption = new Option('video '+data[counter].toString(),data[counter]);
+                    SelectElm.add(newOption,undefined);
+                    counter++
+                }
+            }); 
+
+            function select1_change()
+            {
+                const x = document.getElementById("select1").value;
+                socket.emit('select1_change', x);
+            }
+
+            function select2_change()
+            {
+                const x = document.getElementById("select2").value;
+                socket.emit('select2_change', x);
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,11 @@
+sudo apt-get install build-essential cmake
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+source ~/.bashrc
+nvm install v16
+npm install -g pnpm
+export OPENCV_BUILD_ROOT=~/opencv
+./node_modules/.bin/build-opencv rebuild
+pnpm install --save-dev node-gyp
+pnpm install --save express
+pnpm install --save socket.io
+pnpm install --save serialport 
