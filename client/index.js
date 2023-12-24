@@ -27,19 +27,40 @@ const sp = require("serialport");
 const Gpio = require('onoff').Gpio;
 const config = require('config');
 
+console.log("Set default value")
+
 let port = 3000 ; 
 let GpioPin = 416 ; 
 let FPS = 25; 
+let socket_url= "ws://192.168.0.252:3000"
+
+console.log ("-- port    : ",port);
+console.log ("-- GpioPin : ",GpioPin);
+console.log ("-- FPS     : ",FPS);
+console.log ("-- url     : ",socket_url);
+
+
 console.log("Read config")
+
 if (config.has('server.port')) {
     port = config.get('server.port');
+    console.log ("-- overload server port : ",port);
 }
 if (config.has('gpio.pin')) {
     GpioPin = config.get ('gpio.pin');
+    console.log ("-- overload gpio pin : ",GpioPin);
 } 
 if (config.has('video.FPS')) {
     FPS = config.get ('video.FPS'); 
+    console.log ("-- overload FPS: : ",FPS);
+
 } 
+if (config.has('server.url')) {
+    socket_url = config.get ('server.url'); 
+    console.log ("-- overload url: : ",socket_url);
+} 
+
+
 
 var counter = 0 ; 
 
@@ -60,7 +81,7 @@ const serialPort = new SPort({
 
 const relay = new Gpio(GpioPin, 'out');
 
-const socket_client = io_client("ws://192.168.0.252:3000", {
+const socket_client = io_client(socket_url, {
 reconnectionDelayMax: 10000,
 auth: {
     token: "123"
