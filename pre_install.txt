@@ -3,9 +3,16 @@ curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 source ~/.bashrc
 nvm install v16
 npm install -g pnpm
+
+pnpm install --save-dev node-gyp
+pnpm install --save @u4/opencv4nodejs
+pnpm install --save express
+pnpm install --save socket.io 
+pnpm install --save socket.io-client
+
 export OPENCV_BUILD_ROOT=~/opencv
 ./node_modules/.bin/build-opencv rebuild
-pnpm install --save-dev node-gyp
-pnpm install --save express
-pnpm install --save socket.io
-pnpm install --save serialport 
+cd ~/src/nodejs/control_app_server/node_modules/@u4/opencv4nodejs
+cd node_modules/.bin/
+./opencv-build-npm
+

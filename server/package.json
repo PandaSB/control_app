@@ -1,0 +1,19 @@
+{
+  "name": "control_app_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BARTHELEMY Stephane",
+  "license": "ISC",
+  "devDependencies": {
+    "node-gyp": "^10.0.1"
+  },
+  "dependencies": {
+    "@u4/opencv4nodejs": "^6.5.2",
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  }
+}

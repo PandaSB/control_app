@@ -19,6 +19,7 @@ const path = require('path');
 const app = express(); 
 const server = require('http').Server(app);
 const io = require('socket.io')(server); 
+const io_client = require('socket.io-client');
 const cv = require('@u4/opencv4nodejs');
 const fs = require('fs');
 const os = require('os');
@@ -41,6 +42,17 @@ const serialPort = new SPort({
     flowcontrol: false,
     buffersize: 20480
   });
+
+const socket_client = io_client("ws://192.168.0.252:3000", {
+reconnectionDelayMax: 10000,
+auth: {
+    token: "123"
+},
+query: {
+    "info": "info cpu"
+}
+});
+  
 
 
 app.get('/', (req,res) => {
@@ -180,6 +192,7 @@ io.on('connection', (socket) => {
         const json = JSON.stringify(o);
         //console.log(json) ; 
         socket.emit('info',json) ; 
+        socket_client.emit('info',json)
     },1000)
 
 
